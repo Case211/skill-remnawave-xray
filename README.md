@@ -64,9 +64,11 @@ skills/remnawave-xray/       ← сам скилл:
 | Cursor | `.cursor/rules/remnawave-xray.mdc` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Gemini CLI | `GEMINI.md` |
-| Windsurf | `.windsurf/rules/remnawave-xray.md` |
+| Windsurf / Devin Desktop | `.windsurf/rules/` + `.devin/rules/remnawave-xray.md` |
 
-Использование: помести репозиторий (или нужные файлы) в свой проект — инструмент сам подхватит свою точку входа. Полноценный «skill» с авто-триггером и прогрессивным раскрытием — только в Claude Code; остальные получают роутер + тот же справочник (`reference/`, `generators`, `diagnostics`, `examples/`).
+Использование: помести репозиторий (или нужные файлы) в свой проект — инструмент сам подхватит свою точку входа.
+
+Про механику: `AGENTS.md` — кросс-стандарт (его читают Codex, Cursor, Windsurf/Devin, Cline, Roo, Zed, Amp, Continue и др.), статический always-on. **Полноценный skill** с прогрессивным раскрытием по описанию — второй стандарт ([agentskills.io](https://agentskills.io)), его поддерживают Claude Code, Codex, Gemini CLI, GitHub Copilot и Zed (через `.agents/skills/`/`.claude/skills/`). В этом репо skill живёт в `skills/remnawave-xray/` (Claude Code plugin), остальные инструменты получают роутер (`AGENTS.md`/`GEMINI.md`/rules) + тот же справочник (`reference/`, `generators`, `diagnostics`, `examples/`).
 
 ## Версии стека
 
