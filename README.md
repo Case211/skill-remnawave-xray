@@ -65,10 +65,11 @@ skills/remnawave-xray/       ← сам скилл:
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Gemini CLI | `GEMINI.md` |
 | Windsurf / Devin Desktop | `.windsurf/rules/` + `.devin/rules/remnawave-xray.md` |
+| Codex / Gemini CLI / Copilot / Zed — lazy skill | `.agents/skills/remnawave-xray/SKILL.md` |
 
 Использование: помести репозиторий (или нужные файлы) в свой проект — инструмент сам подхватит свою точку входа.
 
-Про механику: `AGENTS.md` — кросс-стандарт (его читают Codex, Cursor, Windsurf/Devin, Cline, Roo, Zed, Amp, Continue и др.), статический always-on. **Полноценный skill** с прогрессивным раскрытием по описанию — второй стандарт ([agentskills.io](https://agentskills.io)), его поддерживают Claude Code, Codex, Gemini CLI, GitHub Copilot и Zed (через `.agents/skills/`/`.claude/skills/`). В этом репо skill живёт в `skills/remnawave-xray/` (Claude Code plugin), остальные инструменты получают роутер (`AGENTS.md`/`GEMINI.md`/rules) + тот же справочник (`reference/`, `generators`, `diagnostics`, `examples/`).
+Про механику: `AGENTS.md` — кросс-стандарт (его читают Codex, Cursor, Windsurf/Devin, Cline, Roo, Zed, Amp, Continue и др.), статический always-on. **Полноценный skill** с прогрессивным раскрытием по описанию — второй стандарт ([agentskills.io](https://agentskills.io)), его поддерживают Claude Code, Codex, Gemini CLI, GitHub Copilot и Zed (через `.agents/skills/`/`.claude/skills/`). В этом репо skill живёт в `skills/remnawave-xray/` (Claude Code plugin), а `.agents/skills/remnawave-xray/SKILL.md` даёт **ленивую загрузку по описанию** для Codex / Gemini CLI / Copilot / Zed (в контексте только `name`+`description`, тело — при релевантном запросе). Инструменты без skill-поддержки (Cursor / Windsurf / Cline / …) получают роутер (`AGENTS.md`/`GEMINI.md`/rules). Все они ссылаются на один справочник (`reference/`, `generators`, `diagnostics`, `examples/`) — контент не дублируется.
 
 ## Версии стека
 
