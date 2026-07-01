@@ -23,30 +23,35 @@
 ## Структура
 
 ```
-SKILL.md                     роутер: инварианты, карта портов, версии, маршрутизация
-reference/
-  architecture.md            как складывается selfsteal-нода, порты, потоки, xver/proxy_protocol
-  xray-reality.md            Reality/Vision параметры (из кода), post-quantum, анти-пробинг
-  caddy-selfsteal.md         Caddyfile, ACME, listener_wrappers, DNS-only домен
-  mihomo.md                  клиент: DNS/rules/sniffer/TUN + Remnawave-ключи подписки
-  remnawave.md               панель/нода/иерархия, SECRET_KEY (mTLS+JWT), injectHosts, SRR
-  transports.md              xhttp/ws/grpc/httpupgrade/mkcp/hysteria, матрица security×network
-  protocols.md               vmess/trojan/ss/wireguard/VLESS-Encryption + статус HY2/TUIC/AnyTLS
-generators.md                шаблоны + команды ключей + чек-лист согласованности
-diagnostics.md               симптом → причина → фикс + диагностические команды
-examples/                    обезличенные конфиги-эталоны (Xray/Caddy/mihomo/подписка)
+.claude-plugin/
+  marketplace.json           манифест маркетплейса
+  plugin.json                манифест плагина
+skills/remnawave-xray/       ← сам скилл:
+  SKILL.md                   роутер: инварианты, карта портов, версии, маршрутизация
+  reference/                 architecture · xray-reality · caddy-selfsteal · mihomo · remnawave · transports · protocols
+  generators.md              шаблоны + команды ключей + чек-лист согласованности
+  diagnostics.md             симптом → причина → фикс + диагностические команды
+  examples/                  обезличенные конфиги-эталоны (Xray/Caddy/mihomo/подписка)
 ```
 
 ## Установка
 
-Скопировать папку `remnawave-xray/` в каталог скиллов Claude Code:
+**Claude Code — через marketplace:**
 
-- глобально: `~/.claude/skills/` (Windows: `%USERPROFILE%\.claude\skills\`)
-- или на проект: `<project>/.claude/skills/`
+```
+/plugin marketplace add Case211/skill-remnawave-xray
+/plugin install remnawave-xray@case211
+/reload-plugins
+```
+
+Или через UI: `/plugin` → таб **Marketplaces** → добавить `Case211/skill-remnawave-xray`, затем в **Discover** установить `remnawave-xray`.
+
+**Вручную** (без marketplace): скопировать папку `skills/remnawave-xray/` в каталог скиллов —
+`~/.claude/skills/` (Windows: `%USERPROFILE%\.claude\skills\`) или `<project>/.claude/skills/`.
 
 ## Использование
 
-Скилл подхватывается **автоматически** на профильные вопросы (Remnawave, selfsteal, Reality-handshake, xray-config, Caddyfile, mihomo, «нода не подключается»), либо вызывается явно: `/remnawave-xray`.
+После установки скилл подхватывается **автоматически** на профильные вопросы (Remnawave, selfsteal, Reality-handshake, xray-config, Caddyfile, mihomo, «нода не подключается»), либо вызывается явно: `/remnawave-xray`.
 
 ## Версии стека
 
