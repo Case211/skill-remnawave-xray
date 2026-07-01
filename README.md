@@ -53,6 +53,21 @@ skills/remnawave-xray/       ← сам скилл:
 
 После установки скилл подхватывается **автоматически** на профильные вопросы (Remnawave, selfsteal, Reality-handshake, xray-config, Caddyfile, mihomo, «нода не подключается»), либо вызывается явно: `/remnawave-xray`.
 
+## Другие AI-инструменты
+
+Репозиторий **мультиагентный** — точки входа для популярных инструментов (тонкие роутеры на общий контент `skills/remnawave-xray/`, без дублирования):
+
+| Инструмент | Файл |
+|---|---|
+| Claude Code | `skills/remnawave-xray/SKILL.md` (+ marketplace выше) |
+| OpenAI Codex / кросс-стандарт AGENTS.md | `AGENTS.md` |
+| Cursor | `.cursor/rules/remnawave-xray.mdc` |
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Gemini CLI | `GEMINI.md` |
+| Windsurf | `.windsurf/rules/remnawave-xray.md` |
+
+Использование: помести репозиторий (или нужные файлы) в свой проект — инструмент сам подхватит свою точку входа. Полноценный «skill» с авто-триггером и прогрессивным раскрытием — только в Claude Code; остальные получают роутер + тот же справочник (`reference/`, `generators`, `diagnostics`, `examples/`).
+
 ## Версии стека
 
 Актуальны на момент сборки — сверяйте перед деплоем:

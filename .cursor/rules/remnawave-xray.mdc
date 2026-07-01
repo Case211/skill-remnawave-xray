@@ -1,0 +1,22 @@
+---
+description: Remnawave VPN stack — Xray VLESS+Reality+XTLS-Vision, Caddy selfsteal masking, mihomo (Clash.Meta) client. Reference, config generation, symptom-cause-fix diagnostics.
+globs:
+alwaysApply: false
+---
+
+Экспертный справочник по стеку **Remnawave / Xray-Reality / Caddy-selfsteal / mihomo**.
+Полный контент — в `skills/remnawave-xray/` (обычный markdown). Сверяйся с файлами, не по памяти:
+
+- Обзор/инварианты/версии — `skills/remnawave-xray/SKILL.md`
+- Reality/Vision — `skills/remnawave-xray/reference/xray-reality.md`
+- Транспорты (xhttp/ws/grpc/mkcp/hysteria) — `skills/remnawave-xray/reference/transports.md`
+- Протоколы (vmess/trojan/ss/wireguard/HY2, статус TUIC/AnyTLS) — `skills/remnawave-xray/reference/protocols.md`
+- Caddy selfsteal — `skills/remnawave-xray/reference/caddy-selfsteal.md`
+- mihomo клиент — `skills/remnawave-xray/reference/mihomo.md`
+- Панель Remnawave — `skills/remnawave-xray/reference/remnawave.md`
+- Генерация конфигов — `skills/remnawave-xray/generators.md`
+- Диагностика — `skills/remnawave-xray/diagnostics.md`
+- Примеры конфигов — `skills/remnawave-xray/examples/`
+
+**Инварианты:** порт 443; `target` → localhost Caddy, `serverNames == домен` (DNS-only, не Cloudflare);
+flow только `xtls-rprx-vision` (raw); `client-fingerprint` обязателен; `network: "raw"` (не tcp).
