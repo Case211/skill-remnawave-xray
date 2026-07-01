@@ -1,0 +1,289 @@
+{
+  "log": {
+    "error": "/var/log/remnanode/error.log",
+    "access": "/var/log/remnanode/access.log",
+    "loglevel": "warning"
+  },
+  "dns": {},
+  "inbounds": [
+    {
+      "tag": "RU-WS-CDN",
+      "port": 4443,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/assets/static/app.chunk",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "tag": "RU-WS-CDN-2",
+      "port": 4444,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/api/user/settings",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "tag": "RU-WS-CDN-3",
+      "port": 4445,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/api/session/renew",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "tag": "RU-WS-CDN-4",
+      "port": 4446,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/api/telemetry/push",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "tag": "RU-XHTTP-CDN-1",
+      "port": 5447,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": false
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "host": "<CDN_FRONT_HOST>",
+          "mode": "packet-up",
+          "path": "/api/upload/chunk",
+          "extra": {
+            "path": "/api/upload/chunk",
+            "xmux": {
+              "cMaxLifetimeMs": 0,
+              "cMaxReuseTimes": 0,
+              "maxConcurrency": "16-32",
+              "maxConnections": 0
+            },
+            "xPaddingKey": "_dc",
+            "xPaddingHeader": "X-Cache",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "queryInHeader"
+          }
+        }
+      }
+    },
+    {
+      "tag": "RU-XHTTP-CDN-2",
+      "port": 5448,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": false
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "host": "<CDN_FRONT_HOST>",
+          "mode": "packet-up",
+          "path": "/api/notify/poll",
+          "extra": {
+            "path": "/api/notify/poll",
+            "xmux": {
+              "cMaxLifetimeMs": 0,
+              "cMaxReuseTimes": 0,
+              "maxConcurrency": "16-32",
+              "maxConnections": 0
+            },
+            "xPaddingKey": "_dc",
+            "xPaddingHeader": "X-Cache",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "queryInHeader"
+          }
+        }
+      }
+    },
+    {
+      "tag": "RU-XHTTP-CDN-3",
+      "port": 5449,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": false
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "host": "<CDN_FRONT_HOST>",
+          "mode": "packet-up",
+          "path": "/api/feed/list",
+          "extra": {
+            "path": "/api/feed/list",
+            "xmux": {
+              "cMaxLifetimeMs": 0,
+              "cMaxReuseTimes": 0,
+              "maxConcurrency": "16-32",
+              "maxConnections": 0
+            },
+            "xPaddingKey": "_dc",
+            "xPaddingHeader": "X-Cache",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "queryInHeader"
+          }
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "ToGermany",
+      "protocol": "vless",
+      "settings": {
+        "id": "<CLIENT_UUID>",
+        "flow": "xtls-rprx-vision",
+        "port": 443,
+        "address": "<DE_NODE_DOMAIN>",
+        "encryption": "none"
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "reality",
+        "realitySettings": {
+          "password": "<REALITY_PUBLIC_KEY>",
+          "serverName": "<DE_NODE_DOMAIN>",
+          "fingerprint": "firefox"
+        }
+      }
+    },
+    {
+      "tag": "DIRECT",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "BLOCK",
+      "protocol": "blackhole"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "BLOCK"
+      },
+      {
+        "domain": [
+          "geosite:private"
+        ],
+        "outboundTag": "BLOCK"
+      },
+      {
+        "protocol": [
+          "bittorrent"
+        ],
+        "outboundTag": "BLOCK"
+      },
+      {
+        "inboundTag": [
+          "RU-WS-CDN",
+          "RU-WS-CDN-2",
+          "RU-WS-CDN-3",
+          "RU-WS-CDN-4",
+          "RU-XHTTP-CDN-1",
+          "RU-XHTTP-CDN-2",
+          "RU-XHTTP-CDN-3"
+        ],
+        "outboundTag": "ToGermany"
+      }
+    ]
+  }
+}

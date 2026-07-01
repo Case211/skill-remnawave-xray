@@ -1,0 +1,169 @@
+# Mihomo (Clash.Meta) — компактный образец клиентского конфига для Remnawave.
+# Основа — ПУБЛИЧНЫЕ rule-sets: legiz-ru, Davoyan, itdoginfo, MetaCubeX/meta-rules-dat.
+# Хосты (proxies) панель Remnawave подставляет в подписку через remnawave.include-proxies.
+# Это рабочий СКЕЛЕТ с ключевыми приёмами, а не полный прод-конфиг — расширяй под себя.
+
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+tcp-concurrent: true
+unified-delay: true
+find-process-mode: strict
+geodata-mode: false
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  geoip: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+  geosite: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+  mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# ─── Sniffer: определить домен по SNI/Host для доменных правил ───
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  sniff:
+    HTTP: { ports: [80, 8080-8880] }
+    TLS: { ports: [443, 8443] }
+  skip-dst-address: [127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, "fc00::/7"]
+
+# ─── TUN: system-wide перехват ───
+tun:
+  enable: true
+  stack: mixed              # TCP=system, UDP=gvisor
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack: ["any:53", "tcp://any:53"]
+  strict-route: true
+  mtu: 1500
+
+# ─── DNS: fake-ip + анти-петля ───
+dns:
+  enable: true
+  ipv6: false
+  listen: 127.0.0.1:6868
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "+.lan"
+    - "+.local"
+    - "localhost"
+    - "captive.apple.com"                # иначе iOS думает, что нет интернета
+    - "connectivitycheck.gstatic.com"
+    - "+.msftconnecttest.com"
+    - "time.*.com"
+    - "+.pool.ntp.org"
+    - "+.stun.*.*"                        # WebRTC/голос
+    - "stun.l.google.com"
+  default-nameserver:                     # ТОЛЬКО голые IP — бутстрап
+    - 77.88.8.8
+    - 1.1.1.1
+  proxy-server-nameserver:                # резолв хостов прокси-серверов, рвёт DNS-петлю
+    - https://77.88.8.8/dns-query
+  nameserver:
+    - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+  nameserver-policy:
+    "rule-set:geosite-ru":                # РФ-домены — российским DNS
+      - tls://77.88.8.8
+      - 8.8.8.8
+
+# ─── Proxies: боевые хосты подставляет панель Remnawave (include-proxies). Тут только служебные. ───
+proxies:
+  - { name: "DIRECT", type: direct, udp: true }
+
+# ─── Proxy Groups ───
+proxy-groups:
+  - name: 🌍 Proxy
+    type: select
+    remnawave: { include-proxies: true }  # авто-добавить хосты юзера из подписки
+    proxies: [⚡ Auto, DIRECT]
+
+  - name: ⚡ Auto
+    type: url-test
+    remnawave: { include-proxies: true }
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
+    tolerance: 50
+    hidden: true
+
+  - name: ⚪🔵🔴 RU
+    type: select
+    proxies: [DIRECT, 🌍 Proxy]
+
+# ─── Rule Providers (всё публичное) ───
+rule-providers:
+  geosite-ru:
+    type: http
+    behavior: domain
+    format: mrs
+    url: "https://raw.githubusercontent.com/Davoyan/mihomo-rule-sets/main/rules/category-ru.mrs"
+    path: ./rule-sets/geosite-ru.mrs
+    interval: 86400
+    proxy: ⚡ Auto
+  geoip-ru:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: "https://raw.githubusercontent.com/Davoyan/mihomo-rule-sets/main/ip-for-ru/lists/ips-for-ru.mrs"
+    path: ./rule-sets/geoip-ru.mrs
+    interval: 86400
+    proxy: ⚡ Auto
+  ru-inside:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/itdoginfo/allow-domains/main/Russia/inside-clashx.lst"
+    path: ./rule-sets/ru-inside.lst
+    interval: 86400
+    proxy: ⚡ Auto
+  refilter:
+    type: http
+    behavior: domain
+    format: mrs
+    url: "https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/main/re-filter/domain-rule.mrs"
+    path: ./rule-sets/refilter.mrs
+    interval: 86400
+    proxy: ⚡ Auto
+  oisd:
+    type: http
+    behavior: domain
+    format: mrs
+    url: "https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/main/oisd/big.mrs"
+    path: ./rule-sets/oisd.mrs
+    interval: 86400
+    proxy: ⚡ Auto
+  geosite-private:
+    type: http
+    behavior: domain
+    format: mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+    path: ./rule-sets/geosite-private.mrs
+    interval: 86400
+    proxy: ⚡ Auto
+
+# ─── Rules ───
+rules:
+  # приватные/локальные — напрямую
+  - RULE-SET,geosite-private,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  # реклама/трекеры — блок
+  - RULE-SET,oisd,REJECT
+  # РФ-трафик — напрямую (домены + IP)
+  - RULE-SET,geosite-ru,⚪🔵🔴 RU
+  - RULE-SET,geoip-ru,⚪🔵🔴 RU,no-resolve
+  # заблокированное в РФ — через прокси
+  - RULE-SET,ru-inside,🌍 Proxy
+  - RULE-SET,refilter,🌍 Proxy
+  # блок QUIC → трафик уходит на TCP (важно для детекта/Vision)
+  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
+  # всё остальное — через прокси
+  - MATCH,🌍 Proxy

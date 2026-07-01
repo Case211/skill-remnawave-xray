@@ -1,0 +1,172 @@
+{
+  "version": "1",
+  "rules": [
+    {
+      "name": "Browser Subscription",
+      "description": "System critical: do not delete or disable this rule.",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "accept",
+          "operator": "CONTAINS",
+          "value": "text/html",
+          "caseSensitive": true
+        }
+      ],
+      "responseType": "BROWSER"
+    },
+    {
+      "name": "Happ",
+      "description": "Response with BASE64",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "happ",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64"
+    },
+    {
+      "name": "Mihomo Clients",
+      "description": "Response with generated YAML config (Mihomo Template)",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^(?:FlClash|FlClashX|Flowvy|[Cc]lash-[Vv]erge|[Kk]oala-[Cc]lash|[Cc]lash-?[Mm]eta|[Mm]urge|[Cc]lashX [Mm]eta|[Mm]ihomo|[Cc]lash-nyanpasu|clash.meta|prizrak-box)",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "MIHOMO"
+    },
+    {
+      "name": "Xray Checker",
+      "description": "Allow xray-checker to get a subscription",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "xray-checker",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64"
+    },
+    {
+      "name": "Nimbo",
+      "description": "Nimbo Windows VPN client",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "nimbo",
+          "caseSensitive": false
+        },
+        {
+          "headerName": "x-hwid",
+          "operator": "REGEX",
+          "value": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64"
+    },
+    {
+      "name": "v2RayTun",
+      "description": "Response with BASE64",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "v2RayTun",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64"
+    },
+    {
+      "name": "Karing",
+      "description": "Karing (cross-platform) — HWID required",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "Karing",
+          "caseSensitive": false
+        },
+        {
+          "headerName": "x-hwid",
+          "operator": "REGEX",
+          "value": ".+",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64"
+    },
+    {
+      "name": "Shadowrocket",
+      "description": "Shadowrocket (iOS/macOS) — HWID required",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "Shadowrocket",
+          "caseSensitive": false
+        },
+        {
+          "headerName": "x-hwid",
+          "operator": "REGEX",
+          "value": ".+",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64"
+    },
+    {
+      "name": "Stash",
+      "description": "Stash (iOS/macOS, clash-based) — HWID required",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "CONTAINS",
+          "value": "Stash",
+          "caseSensitive": false
+        },
+        {
+          "headerName": "x-hwid",
+          "operator": "REGEX",
+          "value": ".+",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "MIHOMO"
+    },
+    {
+      "name": "Fallback",
+      "description": "Fallback",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [],
+      "responseType": "BLOCK"
+    }
+  ]
+}
