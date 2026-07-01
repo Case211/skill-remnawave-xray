@@ -7,6 +7,7 @@
 - Обзор/инварианты/версии — `skills/remnawave-xray/SKILL.md`
 - Reality/Vision — `skills/remnawave-xray/reference/xray-reality.md`
 - Транспорты/протоколы — `skills/remnawave-xray/reference/transports.md`, `skills/remnawave-xray/reference/protocols.md`
+- Routing (сплит-туннель РФ, гео-разблок OpenAI/Gemini, WARP outbound) — `skills/remnawave-xray/reference/routing.md`
 - Caddy — `skills/remnawave-xray/reference/caddy-selfsteal.md` · mihomo — `skills/remnawave-xray/reference/mihomo.md` · Панель — `skills/remnawave-xray/reference/remnawave.md`
 - Генерация — `skills/remnawave-xray/generators.md` · Диагностика — `skills/remnawave-xray/diagnostics.md` · Примеры — `skills/remnawave-xray/examples/`
 

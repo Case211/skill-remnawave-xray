@@ -18,10 +18,12 @@ Claude Code skill, но это обычный markdown, читаемый люб�
 | Reality/Vision параметры, post-quantum, анти-пробинг | `skills/remnawave-xray/reference/xray-reality.md` |
 | Транспорты: xhttp/ws/grpc/httpupgrade/mkcp/hysteria | `skills/remnawave-xray/reference/transports.md` |
 | Протоколы: vmess/trojan/ss/wireguard/VLESS-Enc, HY2, статус TUIC/AnyTLS | `skills/remnawave-xray/reference/protocols.md` |
+| Routing: сплит-туннель РФ, гео-разблок (OpenAI/Gemini), WARP outbound | `skills/remnawave-xray/reference/routing.md` |
 | Caddy selfsteal (Caddyfile, ACME, proxy_protocol) | `skills/remnawave-xray/reference/caddy-selfsteal.md` |
 | mihomo клиент (DNS/rules/sniffer/TUN) | `skills/remnawave-xray/reference/mihomo.md` |
 | Панель Remnawave (Profile→Inbound→Host→Squad) | `skills/remnawave-xray/reference/remnawave.md` |
 | Генерация конфигов + команды ключей | `skills/remnawave-xray/generators.md` |
+| Проверка конфига на согласованность (скрипт) | `python skills/remnawave-xray/validate.py <config.json> [Caddyfile]` |
 | Диагностика: симптом → причина → фикс | `skills/remnawave-xray/diagnostics.md` |
 | Обезличенные конфиги-эталоны | `skills/remnawave-xray/examples/` |
 

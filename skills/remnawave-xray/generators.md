@@ -42,6 +42,19 @@ xray vlessenc                      # decryption/encryption для VLESS Encrypti
 В Remnawave x25519-пару генерит сама панель (Keygen); руками ключи обычно не трогаешь — pbk выводится из
 privateKey профиля автоматически при сборке подписки.
 
+## Автопроверка
+
+Вместо ручного прогона чек-листа ниже — исполняемый валидатор (stdlib Python, без зависимостей):
+
+```
+python validate.py <config.json>              # только Xray Config Profile
+python validate.py <config.json> Caddyfile    # + кросс-чек target↔порт, xver↔proxy_protocol
+```
+
+Проверяет пункты 1–8 из чек-листа: порт 443, security×network, flow только на raw, ключи 32 байта,
+shortIds (hex/чётность/≤16), serverNames (apple/icloud), xver 0/1/2, allowInsecure, согласование с Caddy.
+Плейсхолдеры `<...>` не считает ошибкой. Код выхода 1 при ошибках. Ручной чек-лист — ниже, как справка.
+
 ## Чек-лист согласованности (нарушишь — не работает)
 
 1. **Домен один и тот же**: `serverNames` (inbound) == `serverName`/SNI (outbound/Host) == `SELF_STEAL_DOMAIN`

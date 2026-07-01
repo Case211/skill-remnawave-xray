@@ -10,6 +10,7 @@ Caddy selfsteal-заглушка, mihomo/Clash.Meta клиент.
 - Reality/Vision — `skills/remnawave-xray/reference/xray-reality.md`
 - Транспорты (xhttp/ws/grpc/mkcp/hysteria) — `skills/remnawave-xray/reference/transports.md`
 - Протоколы (vmess/trojan/ss/wireguard/HY2, статус TUIC/AnyTLS) — `skills/remnawave-xray/reference/protocols.md`
+- Routing (сплит-туннель РФ, гео-разблок OpenAI/Gemini, WARP outbound) — `skills/remnawave-xray/reference/routing.md`
 - Caddy selfsteal — `skills/remnawave-xray/reference/caddy-selfsteal.md`
 - mihomo — `skills/remnawave-xray/reference/mihomo.md` · Панель — `skills/remnawave-xray/reference/remnawave.md`
 - Генерация — `skills/remnawave-xray/generators.md` · Диагностика — `skills/remnawave-xray/diagnostics.md` · Примеры — `skills/remnawave-xray/examples/`

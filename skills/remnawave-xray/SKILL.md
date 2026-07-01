@@ -5,12 +5,13 @@ description: >-
   selfsteal nodes built on VLESS + Reality + XTLS-Vision (Xray-core), Caddy selfsteal
   masking, and mihomo (Clash.Meta) client configs. Triggers on: Remnawave panel/node,
   selfsteal, Reality/Vision handshake, xray config, Caddyfile, mihomo/clash yaml,
+  routing/сплит-туннель, гео-разблок (OpenAI/Gemini), WARP outbound,
   "нода не подключается", "Reality палится", "handshake fail", генерация конфигов нод.
-  Covers stack reference, config generation with validated defaults, and
-  symptom→cause→fix diagnostics.
+  Covers stack reference, config generation with validated defaults, an executable
+  consistency validator, and symptom→cause→fix diagnostics.
 ---
 
-# Remnawave Stack — selfsteal-ноды (Xray Reality + Caddy + mihomo)
+# Remnawave-Xray — selfsteal-ноды (Xray Reality + Caddy + mihomo)
 
 Скилл под конкретный стек: **Remnawave** (оркестратор панель→нода) → **Xray-core**
 (VLESS+Reality+XTLS-Vision на ноде) → **Caddy** (selfsteal-заглушка на той же машине) →
@@ -78,7 +79,9 @@ selfsteal.sh DigneZzZ) на 2026-07-01. Факты, помеченные в по
 | Панель: Config Profile→Inbound→Host, node-agent, автогенерация pubkey | `reference/remnawave.md` |
 | Другие транспорты: xhttp / ws / grpc / httpupgrade / mkcp / hysteria (HY2) | `reference/transports.md` |
 | Другие протоколы: vmess / trojan / ss / wireguard / VLESS-Encryption + статус HY2/TUIC/AnyTLS | `reference/protocols.md` |
+| Routing: сплит-туннель РФ, гео-разблок (OpenAI/Gemini), WARP outbound, geosite/geoip | `reference/routing.md` |
 | Сгенерировать конфиг под параметры + команды ключей | `generators.md` |
+| Проверить готовый конфиг на согласованность (скрипт) | `python validate.py <config.json> [Caddyfile]` |
 | Что-то не работает / палится → симптом→причина→фикс | `diagnostics.md` |
 | Готовые обезличенные боевые шаблоны (selfsteal / CDN-мост / балансир / mihomo / SRR) | `examples/` |
 
@@ -91,8 +94,19 @@ selfsteal.sh DigneZzZ) на 2026-07-01. Факты, помеченные в по
 | Caddy | 2.11.4 | semver |
 | mihomo (Clash.Meta) | 1.19.27 | линейка `v1.19.x` |
 
+Чем проверить актуальность (версии тут — снимок на дату сборки):
+
+```
+docker exec remnanode xray version           # ядро на ноде
+docker exec caddy-selfsteal caddy version     # Caddy
+curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep tag_name
+curl -s https://api.github.com/repos/remnawave/panel/releases/latest | grep tag_name
+curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | grep tag_name
+```
+
 ## Режимы
 
 - **Справочник** — вопрос по стеку: открыть нужный `reference/*.md`, ответить по факту, не по памяти.
-- **Генератор** — нужен конфиг: `generators.md`, заполнить плейсхолдеры, прогнать чеклист согласованности.
+- **Генератор** — нужен конфиг: `generators.md`, заполнить плейсхолдеры, прогнать чеклист согласованности,
+  затем `python validate.py <config.json> [Caddyfile]` — исполняемая проверка тех же инвариантов.
 - **Диагностика** — сломано: `diagnostics.md`, от симптома к причине, дать команды проверки.

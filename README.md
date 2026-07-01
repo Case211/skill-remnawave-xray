@@ -1,5 +1,7 @@
 # remnawave-xray
 
+[English](README.en.md) · **Русский**
+
 > **Claude Code / agent skill** для стека **Remnawave + Xray (Reality/Vision) + Caddy selfsteal + mihomo**.
 > Справочник по стеку, генератор конфигов и диагностика «симптом → причина → фикс» — из официальной документации и исходников.
 >
@@ -14,7 +16,7 @@
 - **Caddy** — selfsteal-заглушка (реальный сайт за Reality `target`, ACME, `proxy_protocol`).
 - **mihomo (Clash.Meta)** — клиентский конфиг: DNS/fake-ip, rules, sniffer, TUN.
 
-Три режима: **справочник** (ответить по факту, не по памяти), **генератор** (шаблон → плейсхолдеры → чек-лист согласованности), **диагностика** (от симптома к причине + команды).
+Три режима: **справочник** (ответить по факту, не по памяти), **генератор** (шаблон → плейсхолдеры → чек-лист согласованности + исполняемый валидатор `validate.py`), **диагностика** (от симптома к причине + команды).
 
 ## ⚠️ Дисклеймер
 
@@ -28,10 +30,13 @@
   plugin.json                манифест плагина
 skills/remnawave-xray/       ← сам скилл:
   SKILL.md                   роутер: инварианты, карта портов, версии, маршрутизация
-  reference/                 architecture · xray-reality · caddy-selfsteal · mihomo · remnawave · transports · protocols
+  reference/                 architecture · xray-reality · caddy-selfsteal · mihomo · remnawave · transports · protocols · routing
   generators.md              шаблоны + команды ключей + чек-лист согласованности
+  validate.py                исполняемая проверка конфига на согласованность (stdlib)
   diagnostics.md             симптом → причина → фикс + диагностические команды
   examples/                  обезличенные конфиги-эталоны (Xray/Caddy/mihomo/подписка)
+tools/
+  sync-check.py              проверка, что кросс-tool точки входа не разъехались с каноном
 ```
 
 ## Установка
@@ -99,3 +104,5 @@ skills/remnawave-xray/       ← сам скилл:
 ## Вклад
 
 PR/issue приветствуются — особенно уточнения по свежим фичам Xray (Hysteria 2, VLESS Encryption) и версиям стека.
+
+Перед PR: `python tools/sync-check.py` — проверяет, что тонкие точки входа (`AGENTS.md`, `GEMINI.md`, `.cursor`/`.windsurf`/`.devin`/`.github`, `.agents/`) ссылаются на канон и повторяют актуальные версии из `skills/remnawave-xray/SKILL.md`. Конфиги гоняются через `python skills/remnawave-xray/validate.py <config.json> [Caddyfile]`.
