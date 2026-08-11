@@ -1,20 +1,14 @@
 {
-  "marketplace": {
-    "name": "case211",
-    "source": "github.com/Case211/skill-remnawave-xray"
-  },
+  "name": "case211",
+  "owner": { "name": "Case211" },
   "plugins": [
     {
       "name": "remnawave-xray",
-      "description": "Remnawave + Xray Reality/Vision + Caddy selfsteal + mihomo — reference, config generation, diagnostics",
-      "author": "Case211",
+      "description": "Remnawave + Xray Reality/Vision + Caddy selfsteal + mihomo: reference, config generation, diagnostics",
       "version": "1.0.0",
+      "author": { "name": "Case211" },
       "license": "AGPL-3.0",
-      "source": {
-        "source": "github",
-        "repo": "Case211/skill-remnawave-xray",
-        "path": "./"
-      }
+      "source": "./"
     }
   ]
 }
