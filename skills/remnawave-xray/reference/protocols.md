@@ -26,6 +26,32 @@ PR #5067, в релизе с **v25.8.31**. Поля `decryption` (inbound) / `en
 - **Совместим с любым** streamSettings: Reality, Vision, TLS, даже `security: none`.
 - **НЕ инструмент обхода** (слова RPRX) — даёт PFS + защиту UUID/метаданных от CDN/relay-посредников. Для
   обхода GFW по-прежнему Reality/Vision/XHTTP. Молодая фича (~с авг 2025), wire-format ещё устаканивается.
+- **С v26.7.28 это ещё и единственный способ оставить VLESS-outbound без TLS** — см. ниже.
+
+## Запрет незашифрованного наружу (v26.7.28) — ломает старые мосты
+
+Ядро больше не собирает конфиг, где **VLESS или Trojan outbound** идёт на **публичный** адрес
+без транспортного шифрования (`infra/conf/xray.go`, `validateOutboundTransportSecurity`):
+
+```
+vless without TLS or other encryption is prohibited unless the server address is a private IP or domain
+trojan without TLS is prohibited unless the server address is a private IP or domain
+```
+
+Проверка идёт при старте, не в рантайме: конфиг просто не поднимется. Условия, при которых
+outbound остаётся законным:
+
+- задан `security` (`tls` / `reality`) в `streamSettings` — обычный случай, ничего делать не надо;
+- **или** у VLESS выставлен `encryption` ≠ `none` (VLESS Encryption) — для Trojan такой лазейки нет;
+- **или** адрес приватный: приватные IP и приватные домены (`127.0.0.1`, локалка, `localhost`)
+  матчатся встроенными `GetPrivateIPMatcher`/`GetPrivateDomainMatcher`.
+
+Кого бьёт: plain-мосты «нода → публичный origin» (VLESS+WS/XHTTP без TLS в расчёте на то, что
+TLS терминирует CDN или фронт). Лечится Reality/TLS на этом плече либо VLESS Encryption.
+Схема «нода → 127.0.0.1:порт локального сервиса» не затронута — она и держит selfsteal.
+
+Заодно в той же версии **выпилены «пустые» шифры legacy-протоколов**: у VMess убраны
+`security: none|zero`, у Shadowsocks — метод `none`/`plain`. Конфиги с ними не стартуют.
 
 ## Hysteria 2 (нативный)
 
@@ -38,13 +64,14 @@ PR #5067, в релизе с **v25.8.31**. Поля `decryption` (inbound) / `en
 
 ## Legacy (для совместимости, новое не строить)
 
-- **VMess** — `clients[].id`, `security` (auto/aes-128-gcm/chacha20-poly1305/none/zero). `alterId` выпилен.
-  Deprecation-warning в логе. Детектируемость выросла.
+- **VMess** — `clients[].id`, `security` (auto/aes-128-gcm/chacha20-poly1305). `alterId` выпилен;
+  **`none` и `zero` убраны в v26.7.28** — конфиг с ними не стартует. Deprecation-warning в логе.
+  Детектируемость выросла.
 - **Trojan** — `clients[].password` + `fallbacks[]` (dest/alpn/path/xver). **`flow` полностью убран** (hardfail
   если непустой — Vision поверх Trojan больше нет). Проще VLESS (пароль + fallback на реальный веб), хорош для
   интеропа со сторонними Trojan-клиентами.
 - **Shadowsocks** — `method`: `2022-blake3-aes-128/256-gcm`, `2022-blake3-chacha20-poly1305`, `aes-256-gcm`,
-  `chacha20-poly1305`, `xchacha20-poly1305`, `none`. `network` tcp/udp/tcp,udp. SS-2022 мульти-юзер:
+  `chacha20-poly1305`, `xchacha20-poly1305` (**`none`/`plain` убраны в v26.7.28**). `network` tcp/udp/tcp,udp. SS-2022 мульти-юзер:
   `password` = `ServerPSK:UserPSK`. Deprecation-warning на любой метод (не удалят). obfs нет.
 
 ## WireGuard (outbound для WARP/цепочек)

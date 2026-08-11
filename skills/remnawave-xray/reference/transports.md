@@ -36,6 +36,11 @@
 - `extra`:
   - `xmux`: `maxConcurrency` (напр. `"16-32"`), `maxConnections`, `cMaxReuseTimes`, `cMaxLifetimeMs`,
     `hMaxRequestTimes`, `hMaxReusableSecs`, `hKeepAlivePeriod`.
+    ⚠️ **v26.7.28: дефолт `maxConnections` у клиента снижен с 6 до 3** («anti-TSPU») — меньше
+    параллельных соединений на связку. Если раньше полагался на дефолт и упёрся в потолок
+    скорости после обновления ноды, поднимай значение явно.
+  - v26.7.28: **клиент больше не дописывает завершающий `/` к `path`**, когда `sessionID` и `seq`
+    размещены не в пути. Совпадение путей на upload/download проверять после обновления.
   - padding/obfs: `xPaddingBytes` (`"100-1000"`), `xPaddingKey/Header/Method/Placement/ObfsMode`,
     `uplinkHTTPMethod`, `noGRPCHeader`, `noSSEHeader`, `scMaxEachPostBytes`, `scMinPostsIntervalMs`,
     `scMaxBufferedPosts`, `scStreamUpServerSecs`, `downloadSettings`.
@@ -44,6 +49,10 @@
 (TLS терминирует CDN/реверс-прокси спереди), `host: <CDN_FRONT_HOST>`, `mode: packet-up`, `path` под
 легитимный API-путь, `xmux.maxConcurrency: "16-32"`, padding `xPaddingMethod: tokenish`,
 `xPaddingPlacement: queryInHeader`, `uplinkHTTPMethod: GET`.
+
+ℹ️ Запрет незашифрованного из v26.7.28 (см. `protocols.md`) касается **только outbound**. Такой
+inbound с `security: none` за CDN законен и дальше: он слушает `127.0.0.1`, а TLS снимает фронт.
+Проверять надо второе плечо — тот outbound, которым нода уходит на публичный адрес.
 
 ## WebSocket (`wsSettings`)
 

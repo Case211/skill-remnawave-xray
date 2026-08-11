@@ -5,7 +5,8 @@ validate.py — проверка согласованности конфигов
 
 Прогоняет чек-лист согласованности из generators.md автоматически: порт 443,
 матрица security x network, flow только на raw, target <-> Caddy-порт, ключи,
-serverNames/shortIds, xver <-> proxy_protocol, apple/icloud, allowInsecure.
+serverNames/shortIds, xver <-> proxy_protocol, apple/icloud, allowInsecure,
+незашифрованные VLESS/Trojan outbound наружу (запрещены ядром с v26.7.28).
 
 Использование:
     python validate.py <xray-config.json> [Caddyfile]
@@ -67,6 +68,64 @@ def port_int(tok):
     if m:
         return int(m.group(1))
     return None
+
+
+def is_private_host(host):
+    """Приватный ли адрес по меркам ядра (приватный IP или локальный домен).
+
+    Xray матчит приватность встроенными geodata-матчерами; здесь достаточно
+    грубого приближения — важен сам факт «наружу или к себе».
+    """
+    if not host:
+        return True
+    h = str(host).strip().rstrip(".").lower()
+    if h in LOCALHOST:
+        return True
+    try:
+        import ipaddress
+        ip = ipaddress.ip_address(h)
+        return ip.is_private or ip.is_loopback or ip.is_link_local
+    except ValueError:
+        pass
+    return h == "localhost" or h.endswith((".local", ".localhost", ".internal", ".lan"))
+
+
+def check_outbound_encryption(ob):
+    """v26.7.28: VLESS/Trojan наружу без шифрования — ядро не соберёт конфиг.
+
+    Законно, если есть security (tls/reality), либо у VLESS задан encryption
+    (VLESS Encryption), либо адрес приватный.
+    """
+    proto = ob.get("protocol")
+    if proto not in ("vless", "trojan"):
+        return
+    tag = ob.get("tag", "<no-tag>")
+    ss = ob.get("streamSettings", {}) or {}
+    security = str(ss.get("security") or "none").lower()
+    if security not in ("", "none"):
+        return
+
+    settings = ob.get("settings", {}) or {}
+    peers = settings.get("vnext") or settings.get("servers") or []
+    for peer in peers:
+        if not isinstance(peer, dict):
+            continue
+        address = peer.get("address")
+        if is_placeholder(address):
+            note(f"[{tag}] адрес-плейсхолдер {address!r} — проверить вручную: "
+                 f"{proto} без TLS/Reality наружу запрещён с v26.7.28")
+            continue
+        if is_private_host(address):
+            continue
+        if proto == "vless":
+            users = peer.get("users") or []
+            if any(str((u or {}).get("encryption") or "none").lower() not in ("", "none")
+                   for u in users):
+                continue   # VLESS Encryption заменяет транспортное шифрование
+        err(f"[{tag}] {proto}-outbound на публичный {address} без security и без "
+            f"encryption — ядро с v26.7.28 не запустится "
+            f"(\"{proto} without TLS ... is prohibited\"). Включить reality/tls "
+            f"или VLESS Encryption")
 
 
 def check_reality_inbound(ib):
@@ -226,6 +285,9 @@ def main():
         warn("не найден ни один VLESS+Reality inbound — проверять нечего")
 
     realities = [check_reality_inbound(ib) for ib in reality_inbounds]
+
+    for ob in cfg.get("outbounds", []) or []:
+        check_outbound_encryption(ob)
 
     caddy = None
     if len(sys.argv) >= 3:

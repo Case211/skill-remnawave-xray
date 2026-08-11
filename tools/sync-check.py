@@ -45,11 +45,14 @@ def canon_versions(txt):
     def grab(pat):
         m = re.search(pat, txt)
         return m.group(1) if m else None
+    # Панель и нода версионируются раздельно (панель 3.2.3 при ноде 3.1.1),
+    # поэтому в таблице они отдельными строками — одной версии «Remnawave» нет.
     return {
-        "Remnawave": grab(r"Remnawave panel/node\s*\|\s*([0-9][0-9.]*)"),
-        "Xray-core": grab(r"Xray-core\s*\|\s*(v[0-9][0-9.]*)"),
-        "Caddy":     grab(r"\|\s*Caddy\s*\|\s*([0-9][0-9.]*)"),
-        "mihomo":    grab(r"mihomo \(Clash\.Meta\)\s*\|\s*([0-9][0-9.]*)"),
+        "Remnawave panel": grab(r"Remnawave panel\s*\|\s*([0-9][0-9.]*)"),
+        "Remnawave node":  grab(r"Remnawave node\s*\|\s*([0-9][0-9.]*)"),
+        "Xray-core":       grab(r"Xray-core\s*\|\s*(v[0-9][0-9.]*)"),
+        "Caddy":           grab(r"\|\s*Caddy\s*\|\s*([0-9][0-9.]*)"),
+        "mihomo":          grab(r"mihomo \(Clash\.Meta\)\s*\|\s*([0-9][0-9.]*)"),
     }
 
 

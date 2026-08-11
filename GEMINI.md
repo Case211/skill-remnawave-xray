@@ -17,4 +17,4 @@ Caddy selfsteal-заглушка, mihomo/Clash.Meta клиент.
 
 Инварианты: порт 443; `target` → localhost Caddy, `serverNames == домен` (DNS-only, НЕ Cloudflare); flow только
 `xtls-rprx-vision` (raw); `client-fingerprint` обязателен; `network: "raw"` (не tcp).
-Версии: Remnawave 2.8.0 · Xray-core v26.6.27 · Caddy 2.11.4 · mihomo 1.19.27.
+Версии: Remnawave panel 3.2.3 · node 3.1.1 · Xray-core v26.7.28 · Caddy 2.11.4 · mihomo 1.19.29.

@@ -82,10 +82,11 @@ tools/
 
 | Компонент | Версия |
 |---|---|
-| Remnawave panel/node | 2.8.0 |
-| Xray-core | v26.6.27 (CalVer) |
+| Remnawave panel | 3.2.3 |
+| Remnawave node | 3.1.1 |
+| Xray-core | v26.7.28 (CalVer) |
 | Caddy | 2.11.4 |
-| mihomo (Clash.Meta) | 1.19.27 |
+| mihomo (Clash.Meta) | 1.19.29 |
 
 ## Источники
 

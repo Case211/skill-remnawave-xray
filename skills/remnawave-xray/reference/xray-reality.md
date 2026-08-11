@@ -1,7 +1,9 @@
 # Xray-core: VLESS + Reality + XTLS-Vision
 
-Xray-core **v26.6.27** (CalVer `vYY.M.D`). Имена полей и валидация сверены с официальной
-докой `xtls.github.io` (en/ru/zh совпадают) и исходниками `infra/conf/transport_internet.go`.
+Xray-core **v26.7.28** (CalVer `vYY.M.D`; это ядро внутри Remnawave Node 3.1.1). Имена полей и
+валидация сверены с официальной докой `xtls.github.io` (en/ru/zh совпадают) и исходниками
+`infra/conf/` — с v26.7.28 разбор транспортов разнесён по `transport_method.go`,
+`transport_security.go`, `transport_finalmask.go`, `transport_sockopt.go`.
 Один struct обслуживает inbound и outbound — роль определяется наличием `target`/`dest`.
 
 Полный дамп офиц. доки для точечной сверки: https://xtls.github.io/llms-full.txt (642 КБ, first-party).
@@ -10,6 +12,9 @@ Xray-core **v26.6.27** (CalVer `vYY.M.D`). Имена полей и валида
 
 - **`network: "tcp"` переименован в `"raw"`** (релиз v24.9.30). `tcp.html` в доке — редирект на RAW.
   В хранимых конфигах встречаются оба; клиентская `vless://`-ссылка нормализует обратно в `type=tcp`.
+- **Само поле `network` переименовано в `method`** (v26.7.28): в `streamSettings` теперь канон
+  `"method": "raw"`. `network` **оставлен алиасом** — старые конфиги и панель, которая пишет
+  `network`, продолжают работать; менять существующие профили только ради имени не нужно.
 - **`dest` -> `target`**, **`publicKey` -> `password`** — переименованы, старые имена оставлены алиасами.
   `password` на клиенте — это x25519 public key сервера, просто «не для публикации» по модели Reality.
 - **`allowInsecure` УДАЛЁН** (v26.2.6) -> замена `pinnedPeerCertSha256` (+ `verifyPeerCertByName` для SNI-проверки).
@@ -36,7 +41,7 @@ Xray-core **v26.6.27** (CalVer `vYY.M.D`). Имена полей и валида
 | `privateKey` | да | x25519 (`xray x25519`), base64 RawURLEncoding, ровно 32 байта. Хранится внутри Config Profile панели, наружу не уходит. |
 | `shortIds` | да | список hex <=16 симв, **чётной длины**; `""` допустим. |
 | `xver` | нет | PROXY-protocol на форвард к target: **0/1/2**. selfsteal обычно 1. |
-| `minClientVer` / `maxClientVer` | нет | `"x.y.z"`, каждый компонент 0-255. |
+| `minClientVer` / `maxClientVer` | нет | `"x.y.z"`, каждый компонент 0-255. ⚠️ **С v26.7.28 у сервера дефолт `minClientVer: "26.3.27"`** — клиенты на ядре старее молча не подключатся. Обновление ноды до 3.1.1 отрезает старые сборки клиентов; ослаблять — только явным значением и осознанно. |
 | `maxTimeDiff` | нет | допустимый разброс часов, мс (обычно 0 или ~60000). |
 | `mldsa65Seed` | нет, only server | seed ML-DSA-65 (`xray mldsa65`), 32 байта, != privateKey. **Нужен cert target > 3500 байт.** |
 | `limitFallbackUpload` / `limitFallbackDownload` | нет | `{afterBytes, bytesPerSec, burstBytesPerSec}` — троттлинг непрошедших авторизацию. Офиц. предупреждение: сам лимит — тоже отпечаток. |

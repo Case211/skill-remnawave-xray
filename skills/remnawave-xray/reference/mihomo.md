@@ -1,6 +1,7 @@
 # mihomo (Clash.Meta): клиентский конфиг
 
-mihomo **v1.19.27** (линейка `v1.19.x`). Наследник Clash/Clash.Meta (Clash более не поддерживается).
+mihomo **v1.19.29** (линейка `v1.19.x`, стабильная; факты ниже проверялись на 1.19.27–1.19.29).
+Наследник Clash/Clash.Meta (Clash более не поддерживается).
 Синтаксис — wiki.metacubex.one. Компактный образец: `../examples/mihomo-example.yaml`.
 
 ## Верхнеуровневые ключи config.yaml

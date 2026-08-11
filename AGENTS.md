@@ -35,4 +35,4 @@ Claude Code skill, но это обычный markdown, читаемый люб�
 - `network: "raw"` (не `tcp`); официальные имена `target`/`password` (не dest/publicKey).
 - Ключи: privateKey/publicKey 32 байта; `pubkey = xray x25519 -i "<privateKey>"`.
 
-Версии (сверять перед деплоем): Remnawave **2.8.0** · Xray-core **v26.6.27** · Caddy **2.11.4** · mihomo **1.19.27**.
+Версии (сверять перед деплоем): Remnawave panel **3.2.3** · node **3.1.1** · Xray-core **v26.7.28** · Caddy **2.11.4** · mihomo **1.19.29**.

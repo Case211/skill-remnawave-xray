@@ -18,8 +18,8 @@ description: >-
 **mihomo/Clash.Meta** (клиент). Три режима: справочник, генератор конфигов, диагностика.
 
 Данные собраны из первоисточников (исходники XTLS/Xray-core, wiki mihomo, docs.rw,
-selfsteal.sh DigneZzZ) на 2026-07-01. Факты, помеченные в подфайлах как «НЕТОЧНО» —
-проверять под свою версию.
+selfsteal.sh DigneZzZ) на 2026-07-01, сверены с Panel 3.2.3 / Node 3.1.1 / Xray v26.7.28
+на 2026-08-11. Факты, помеченные в подфайлах как «НЕТОЧНО» — проверять под свою версию.
 
 ## Когда использовать
 
@@ -67,6 +67,16 @@ selfsteal.sh DigneZzZ) на 2026-07-01. Факты, помеченные в по
 8. **Инфра ноды:** `network_mode: host` для Xray и Caddy; порт **80** открыт (ACME); порт ноды
    (control-API панель→нода) открыт только для IP панели; связь панель→нода двухслойная (mTLS + JWT RS256,
    `SECRET_KEY` = base64-JSON с сертами). Внутренний API Xray — `127.0.0.1:61000`/unix-socket (не «61001»), не трогать.
+9. **Reality-сервер с v26.7.28 требует клиента ≥ 26.3.27** — появился дефолт
+   `"minClientVer": "26.3.27"`. Обновил ноду — старые клиенты (и старые сборки Happ/mihomo
+   на древнем ядре) отваливаются молча со стороны юзера. Снимается явным `minClientVer`
+   в `realitySettings`, но это осознанный откат защиты, а не «починка».
+10. **VLESS и Trojan без шифрования наружу запрещены ядром с v26.7.28.** Outbound без
+   `security` (TLS/Reality) и без VLESS Encryption на **публичный** адрес роняет конфиг
+   на старте: `vless without TLS or other encryption is prohibited unless the server
+   address is a private IP or domain`. Приватные IP и домены (`127.0.0.1`, локалка)
+   по-прежнему можно — на них держится связка «нода → локальный сервис». Бьёт по
+   plain-мостам «нода → публичный origin»: там нужен Reality/TLS либо VLESS Encryption.
 
 ## Куда смотреть
 
@@ -85,22 +95,29 @@ selfsteal.sh DigneZzZ) на 2026-07-01. Факты, помеченные в по
 | Что-то не работает / палится → симптом→причина→фикс | `diagnostics.md` |
 | Готовые обезличенные боевые шаблоны (selfsteal / CDN-мост / балансир / mihomo / SRR) | `examples/` |
 
-## Версии стека (на 2026-07-01 — сверять перед деплоем)
+## Версии стека (на 2026-08-11 — сверять перед деплоем)
 
 | Компонент | Версия | Формат |
 |---|---|---|
-| Remnawave panel/node | 2.8.0 (2026-06-29) | semver |
-| Xray-core | v26.6.27 | CalVer `vYY.M.D` |
+| Remnawave panel | 3.2.3 (2026-08-10) | semver, образ `remnawave/backend:3` |
+| Remnawave node | 3.1.1 (2026-08-09) | semver, внутри Xray v26.7.28 |
+| Xray-core | v26.7.28 | CalVer `vYY.M.D` |
 | Caddy | 2.11.4 | semver |
-| mihomo (Clash.Meta) | 1.19.27 | линейка `v1.19.x` |
+| mihomo (Clash.Meta) | 1.19.29 | линейка `v1.19.x` |
+
+Ядро отдельно не ставится: нода несёт его в образе (`ARG XRAY_CORE_VERSION` в её Dockerfile) —
+версия ядра на ноде определяется версией ноды, а не выбирается.
 
 Чем проверить актуальность (версии тут — снимок на дату сборки):
 
 ```
-docker exec remnanode xray version           # ядро на ноде
+docker exec remnanode xray version            # ядро на ноде
 docker exec caddy-selfsteal caddy version     # Caddy
-curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep tag_name
+# ⚠️ у XTLS ВСЕ релизы помечены pre-release, поэтому /releases/latest отдаёт
+# устаревший тег (на 2026-08-11 — v26.3.27 вместо v26.7.28). Брать первый из списка:
+curl -s 'https://api.github.com/repos/XTLS/Xray-core/releases?per_page=1' | grep tag_name
 curl -s https://api.github.com/repos/remnawave/panel/releases/latest | grep tag_name
+curl -s https://api.github.com/repos/remnawave/node/releases/latest | grep tag_name
 curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | grep tag_name
 ```
 
